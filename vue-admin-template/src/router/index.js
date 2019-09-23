@@ -49,6 +49,14 @@ export const constantRoutes = [
         meta: { title: '登录日志', icon: 'table' }
       },
 
+      //数据字典
+       {
+         path: 'datadictionary',
+         name: 'DataDictionary',
+         component: () => import('@/views/datadictionary/index'),
+         meta: { title: '数据字典', icon: 'table' }
+      },
+
 
       {
         path: 'table',
