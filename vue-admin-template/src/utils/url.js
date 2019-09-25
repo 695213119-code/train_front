@@ -9,6 +9,10 @@ const url={
     //用户登录日志
     "queryUserLoginLog":base_url+"/apigateway/user-center/api/user-loginLog/queryUserLoginLog",
     //获取数据字典
-    "queryDictionaries":base_url+"/apigateway/core-service/api/dataDictionary/queryDictionaries"
+    "queryDictionaries":base_url+"/apigateway/core-service/api/data-dictionary/queryDictionaries",
+    //添加字典
+    "addDictionaries":base_url+"/apigateway/core-service/api/data-dictionary/addDictionaries",
+    //修改字典
+    "editDictionaries":base_url+"/apigateway/core-service/api/data-dictionary/editDictionaries"
 }
 export default url
