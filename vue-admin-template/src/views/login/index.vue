@@ -55,7 +55,6 @@ import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
-
   //校验用户名
   data() {
     const validateUsername = (rule, value, callback) => {

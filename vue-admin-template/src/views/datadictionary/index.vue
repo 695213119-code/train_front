@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
 
-      <el-input v-model="listQuery.key" placeholder="KEY" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.key" placeholder="KEY"  style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
       <el-input v-model="listQuery.remarks" placeholder="备注" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
@@ -58,7 +58,7 @@
 
       <el-table-column label="更新时间" width="250px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.updateTime==''?scope.row.updateTime:"该字典未更新过" }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
 
@@ -81,18 +81,18 @@
     <!-- 添加/修改字典  :rules="rules"-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
 
-      <el-form ref="dataForm"  :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
       
-      <!-- 编辑状态下属性为只读 -->
-        <el-form-item label="KEY" prop="title" >
-          <el-input v-model="temp.dicKey"  v-bind:readonly="readonly"/>
+      <!-- 编辑状态下属性为只读  -->
+        <el-form-item label="KEY" prop="dicKey" >
+          <el-input v-model="temp.dicKey"  :disabled="readonly"/>
         </el-form-item>
     
-        <el-form-item label="Val" prop="title">
+        <el-form-item label="Val" prop="dicValue">
           <el-input v-model="temp.dicValue" />
         </el-form-item>
 
-         <el-form-item label="备注" prop="title">
+         <el-form-item label="备注" prop="remarks">
           <el-input v-model="temp.remarks" />
         </el-form-item>
 
@@ -177,9 +177,11 @@ export default {
       },
       dialogPvVisible: false,
       pvData: [],
-      //有错误
+      //prop="remarks" 必须跟rules的对象名一致
       rules: {
-       title: [{ required: true, message: '此项为必填项', trigger: 'blur' }]
+       dicKey: [{ required: true, message: '此项为必填项', trigger: 'blur' }],
+       dicValue: [{ required: true, message: '此项为必填项', trigger: 'blur' }],
+       remarks: [{ required: true, message: '此项为必填项', trigger: 'blur' }]
       },
       downloadLoading: false,
       //设置只读属性
@@ -237,6 +239,7 @@ export default {
     },
     //添加字典
      createData() {
+       console.log(this.temp)
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           createArticle(this.temp).then(() => {
