@@ -13,6 +13,10 @@ const url={
     //添加字典
     "addDictionaries":base_url+"/apigateway/core-service/api/data-dictionary/addDictionaries",
     //修改字典
-    "editDictionaries":base_url+"/apigateway/core-service/api/data-dictionary/editDictionaries"
+    "editDictionaries":base_url+"/apigateway/core-service/api/data-dictionary/editDictionaries",
+    //获取角色列表
+    "queryRoleTabulation":base_url+"/apigateway/authority-service/api/role/queryRoleTabulation",
+    //添加角色
+    "addRole":base_url+"/apigateway/authority-service/api/role/addRole"
 }
 export default url

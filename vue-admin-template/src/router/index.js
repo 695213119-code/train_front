@@ -38,7 +38,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: '设置', icon: 'example' },
+    meta: { title: '系统设置', icon: 'example' },
     children: [
 
       //登录日志
@@ -55,6 +55,14 @@ export const constantRoutes = [
          name: 'DataDictionary',
          component: () => import('@/views/datadictionary/index'),
          meta: { title: '数据字典', icon: 'table' }
+      },
+
+      //角色权限
+       {
+         path: 'roleauthority',
+         name: 'RoleAuthority',
+         component: () => import('@/views/roleauthority/index'),
+         meta: { title: '角色权限', icon: 'table' }
       },
 
 
