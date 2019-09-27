@@ -27,6 +27,7 @@ export function addRole(data) {
   })
 }
 
+//修改角色
 export function updateRole(id, data) {
   return request({
     url: `/role/${id}`,

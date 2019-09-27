@@ -30,7 +30,9 @@
 
       <el-table-column align="header-center" label="角色权限" width="220">
         <template slot-scope="scope">
-        <span  class="link-type" @click="queryRolePermissions(scope.row.roleAuthority)">点击查看角色权限</span>
+        <el-link @click="queryRolePermissions(scope.row.roleAuthority,scope.row.selectPermissions)">
+            点击查看权限
+        <i class="el-icon-view el-icon--right"></i> </el-link>
         </template>
       </el-table-column>
 
@@ -38,10 +40,10 @@
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
-          <el-button type="info " size="small" >赋权</el-button>
-          <!-- @click="handleDelete(scope)" -->
-        </template>
-      </el-table-column>
+          <el-button type="info " size="small"  >赋权</el-button>
+          <!-- @click="empowerment"  -->
+        </template>  
+      </el-table-column> 
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getRoles" />
@@ -74,23 +76,25 @@
 
     <!-- 角色赋权弹框组件 树形菜单-->
     <el-dialog :visible.sync="roleEmpowerment">
-        <el-form-item label="Menus">
-          <el-tree
-            ref="tree"
-            :check-strictly="checkStrictly"
-            :data="routesData"
-            :props="defaultProps"
-            show-checkbox
-            node-key="path"
-            class="permission-tree"
-          />
-        </el-form-item>
+        <el-form  label-width="80px" label-position="left">
+            <el-form-item label="角色权限">
+                <el-tree
+                :data="routesData"
+                show-checkbox
+                highlight-current
+                default-expand-all
+                node-key="id"
+                :props="defaultProps"
+                :default-checked-keys="menuKeys">
+                </el-tree>
+            </el-form-item>
+        </el-form>
     </el-dialog>
+
   </div>
 </template>
 
 <script>
-import path from 'path'
 import { deepClone } from '@/utils'
 import { getRoles, addRole, deleteRole, updateRole } from '@/api/role'
 import Pagination from '@/components/Pagination' 
@@ -103,7 +107,8 @@ const defaultRole = {
   roleDuty: '',
   createTime: '',
   updateTime: '',
-  roleAuthority: []
+  roleAuthority: [],
+  selectPermissions:[]
 }
 
 export default {
@@ -132,16 +137,17 @@ export default {
       //角色赋权弹框
       roleEmpowerment:false,
       dialogType: 'new',
-      checkStrictly: false,
+      //角色赋权框是否禁用
+      checkStrictly: true,
+      //菜单权限数据
+      routesData:[],
+      menuKeys:[],
+      //多级菜单
       defaultProps: {
-        children: 'children',
-        label: 'title'
+        children: 'roleAuthorityChildren',
+        label: 'jurName',
+        disabled: this.disabledFn
       }
-    }
-  },
-  computed: {
-    routesData() {
-      return this.routes
     }
   },
   created() {
@@ -155,50 +161,17 @@ export default {
       this.total = res.total
     },
     //点击查询角色权限
-    queryRolePermissions(){
+    queryRolePermissions(data,selectPermissions){
         this.roleEmpowerment=true;
+        this.routesData=data;
+        //获取当前角色权限被选中的权限id
+        console.log(selectPermissions);
+        this.menuKeys=selectPermissions;
+        
     },
-
-    // Reshape the routes structure so that it looks the same as the sidebar
-    generateRoutes(routes, basePath = '/') {
-      const res = []
-
-      for (let route of routes) {
-        // skip some route
-        if (route.hidden) { continue }
-
-        const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-
-        if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-          route = onlyOneShowingChild
-        }
-
-        const data = {
-          path: path.resolve(basePath, route.path),
-          title: route.meta && route.meta.title
-
-        }
-
-        // recursive child routes
-        if (route.children) {
-          data.children = this.generateRoutes(route.children, data.path)
-        }
-        res.push(data)
-      }
-      return res
-    },
-    generateArr(routes) {
-      let data = []
-      routes.forEach(route => {
-        data.push(route)
-        if (route.children) {
-          const temp = this.generateArr(route.children)
-          if (temp.length > 0) {
-            data = [...data, ...temp]
-          }
-        }
-      })
-      return data
+    //设置角色赋权是选择框禁用
+    disabledFn(data, node) {
+         return this.checkStrictly;
     },
     //新建角色弹框属性设置
     handleAddRole() {
@@ -219,40 +192,24 @@ export default {
         type: 'warning'
       })
         .then(async() => {
+            //执行删除角色方法
           await deleteRole(row.key)
           this.rolesList.splice($index, 1)
           this.$message({
             type: 'success',
-            message: 'Delete succed!'
+            message: '删除角色成功!'
           })
 
         })
         .catch(err => { console.error(err) })
     },
-    generateTree(routes, basePath = '/', checkedKeys) {
-      const res = []
-
-      for (const route of routes) {
-        const routePath = path.resolve(basePath, route.path)
-
-        // recursive child routes
-        if (route.children) {
-          route.children = this.generateTree(route.children, routePath, checkedKeys)
-        }
-
-        if (checkedKeys.includes(routePath) || (route.children && route.children.length >= 1)) {
-          res.push(route)
-        }
-      }
-      return res
-    },
     //提交角色表单
     async confirmRole() {
+        //获取当前弹框状态
       const isEdit = this.dialogType === 'edit'
-    //   const checkedKeys = this.$refs.tree.getCheckedKeys()
-    //   this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
     //判断新增还是修改
       if (isEdit) {
+          //执行修改角色方法
         await updateRole(this.role.key, this.role)
         for (let index = 0; index < this.rolesList.length; index++) {
           if (this.rolesList[index].key === this.role.key) {
@@ -261,8 +218,10 @@ export default {
           }
         }
       } else {
+          //执行添加角色方法
        await addRole(this.role)
       }
+      //回显提示信息
       const { roleName, roleDuty } = this.role
       this.dialogVisible = false
       this.$notify({
@@ -272,29 +231,10 @@ export default {
             <div>角色名称: ${roleName}</div>
             <div>角色职责: ${roleDuty}</div> `,
         type: 'success'
-        
+
       })
+      //重新刷新页面
      this.getRoles();
-    },
-    // reference: src/view/layout/components/Sidebar/SidebarItem.vue
-    onlyOneShowingChild(children = [], parent) {
-      let onlyOneChild = null
-      const showingChildren = children.filter(item => !item.hidden)
-
-      // When there is only one child route, the child route is displayed by default
-      if (showingChildren.length === 1) {
-        onlyOneChild = showingChildren[0]
-        onlyOneChild.path = path.resolve(parent.path, onlyOneChild.path)
-        return onlyOneChild
-      }
-
-      // Show parent if there are no child route to display
-      if (showingChildren.length === 0) {
-        onlyOneChild = { ... parent, path: '', noShowingChildren: true }
-        return onlyOneChild
-      }
-
-      return false
     }
   }
 }
