@@ -272,6 +272,7 @@ export default {
             <div>角色名称: ${roleName}</div>
             <div>角色职责: ${roleDuty}</div> `,
         type: 'success'
+        
       })
      this.getRoles();
     },
