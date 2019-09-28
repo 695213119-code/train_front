@@ -29,6 +29,9 @@
         </template>
       </el-table-column>
 
+
+
+
       <el-table-column align="header-center" label="角色权限" width="220">
         <template slot-scope="scope">
          <el-link type="primary" @click="queryRolePermissions(scope.row.roleAuthority,scope.row.selectPermissions)">点击查看权限<i class="el-icon-view el-icon--right"></i> </el-link>
