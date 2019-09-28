@@ -17,6 +17,12 @@ const url={
     //获取角色列表
     "queryRoleTabulation":base_url+"/apigateway/authority-service/api/role/queryRoleTabulation",
     //添加角色
-    "addRole":base_url+"/apigateway/authority-service/api/role/addRole"
+    "addRole":base_url+"/apigateway/authority-service/api/role/addRole",
+    //角色赋权
+    "roleEmpowerment":base_url+"/apigateway/authority-service/api/role/roleEmpowerment",
+    //修改角色
+    "editRole":base_url+"/apigateway/authority-service/api/role/editRole",
+    //删除角色
+    "deleteRole":base_url+"/apigateway/authority-service/api/role/deleteRole"
 }
 export default url

@@ -1,16 +1,17 @@
 import request from '@/utils/request'
 import  path from "@/utils/url"
 
-//路由
-export function getRoutes() {
+//角色赋权
+export function roleUthorization(data) {
   return request({
-    url: '/routes',
-    method: 'get'
+    url: path.roleEmpowerment,
+    method: 'post',
+    data
   })
 }
 
 //列表查询
-export function getRoles(data) {
+export function getRoleList(data) {
   return request({
     url: path.queryRoleTabulation,
     method: 'get',
@@ -28,17 +29,18 @@ export function addRole(data) {
 }
 
 //修改角色
-export function updateRole(id, data) {
+export function updateRole(data) {
   return request({
-    url: `/role/${id}`,
+    url: path.editRole,
     method: 'put',
     data
   })
 }
 
+//删除角色
 export function deleteRole(id) {
   return request({
-    url: `/role/${id}`,
+    url: path.deleteRole+"?roleId="+id,
     method: 'delete'
   })
 }

@@ -26,11 +26,6 @@
       style="width: 100%;"
     >
 
-     <!-- <el-table-column label="ID" width="350px" align="center" >
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column label="字典的key" width="350px" align="center">
         <template slot-scope="scope">
