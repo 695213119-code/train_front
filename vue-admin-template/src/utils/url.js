@@ -23,6 +23,8 @@ const url={
     //修改角色
     "editRole":base_url+"/apigateway/authority-service/api/role/editRole",
     //删除角色
-    "deleteRole":base_url+"/apigateway/authority-service/api/role/deleteRole"
+    "deleteRole":base_url+"/apigateway/authority-service/api/role/deleteRole",
+    //获取用户列表
+    "queryUserTabulation":base_url+"/apigateway/user-center/api/user-center/queryUserTabulation"
 }
 export default url

@@ -32,6 +32,36 @@ export const constantRoutes = [
     }]
   },
 
+
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/excel/export-excel',
+    name: 'user',
+    meta: {
+      title: '用户',
+      icon: 'user'
+    },
+    children: [
+
+      //用户管理
+      {
+        path: 'usermanagement',
+        name: 'UserManagement',
+        component: () => import('@/views/usermanagement/index'),
+        meta: { title: '用户管理', icon: 'usermanagement ' }
+      },
+
+      //实名认证
+      {
+        path: 'authentication',
+        name: 'Authentication',
+        component: () => import('@/views/authentication/index'),
+        meta: { title: '实名认证', icon: 'authentication' }
+      },
+    ]
+  },
+
   //设置
   {
     path: '/example',
