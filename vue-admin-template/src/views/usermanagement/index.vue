@@ -66,7 +66,7 @@
       </el-table-column>
 
 
-      <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="400" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
 
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -178,11 +178,8 @@ export default {
     list:null,
     listLoading: true,
     dialogPvVisible: false,
-    lastArticleVisible: "none",
-    netxArticleVisible: "none",
     indexnumber:undefined,
     pvListIndexes:undefined,
-    thirdPartyNextArticleButton: 2,
     thirdDialogPvVisible:false,
     pvListTem:[],
     userTitle:"",
@@ -211,7 +208,6 @@ export default {
        { "key":"用户age",'pv': ""},
        { "key":"用户头像",'pv': ""}
     ],
-
     //搜索条件
     listQuery: {
     page: 1,
@@ -219,6 +215,9 @@ export default {
     key:undefined,
     remarks:undefined
     },
+
+
+
 
       calendarTypeOptions,
       showReviewer: false,
@@ -278,12 +277,18 @@ export default {
 
     //实名数据弹框展示
     handleFetchPv(pv) {    
+    if(pv.idCard==null){
+        this.$alert('该用户没有实名认证', '用户实名信息', {
+          confirmButtonText: '知道了'
+        });
+    }else{
     this.realnamePvData[0].pv=pv.userName;
     this.realnamePvData[1].pv=pv.idCard;
     this.realnamePvData[2].pv=pv.cardUrl;
     this.pvData = this.realnamePvData
     this.userTitle="用户实名信息";
     this.dialogPvVisible = true
+      }
     },
 
     //附属数据弹框展示
@@ -301,12 +306,19 @@ export default {
 
     //第三方信息弹框展示
     handleUserThirdsPv(pvList){
+    //判断是否存在数据
+    if(pvList.length==0){
+        this.$alert('该用户没有第三方信息', '用户第三方信息', {
+          confirmButtonText: '知道了'
+        });
+    } else{
     //获取当前数据的长度
     this.indexnumber=pvList.length;
     //获取数组当前索引
     this.pvListIndexes=0;
     this.elasticFrameUserThirdsPv(pvList);
     this.pvListTem=pvList;
+      }
     },
 
     //用户第三方信息弹框
