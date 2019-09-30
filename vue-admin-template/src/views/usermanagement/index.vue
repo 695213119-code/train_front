@@ -1,10 +1,39 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+        
+      <el-input clearable v-model="listQuery.comprehensive" placeholder="手机号/用户名/身份证号码"  style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-      <el-input v-model="listQuery.key" placeholder="KEY"  style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="listQuery.roleId" clearable placeholder="角色" style="width: 100px;">
+          <el-option
+          v-for="item in options"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id">
+          </el-option>
+      </el-select>
 
-      <el-input v-model="listQuery.remarks" placeholder="备注" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+    <el-select v-model="listQuery.isReal" clearable placeholder="是否实名制" style="width: 130px;">
+        <el-option
+          v-for="item in isRealNamePv"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+    </el-select>
+
+    <span class="demonstration"></span>
+    <el-date-picker
+      v-model="userCreateTime"
+      type="daterange"
+      align="right"
+      unlink-panels
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+      :picker-options="pickerOptions">
+    </el-date-picker>
+
 
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -26,19 +55,19 @@
       style="width: 100%;"
     >
 
-      <el-table-column label="手机号" width="250px" align="center">
+      <el-table-column label="手机号"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userCore.phone }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="角色名称" width="210px" align="center">
+      <el-table-column label="角色名称"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userCore.roleName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="实名信息" width="310px" align="center">
+      <el-table-column label="实名信息" align="center">
         <template slot-scope="scope">
              <el-link type="primary" @click="handleFetchPv(scope.row.userCore)">
                  点击查看用户实名信息
@@ -47,7 +76,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="附属信息" width="250px" align="center">
+      <el-table-column label="附属信息"  align="center">
         <template slot-scope="scope">
              <el-link type="primary" @click="handleUserSubsidiaryPv(scope.row.userSubsidiary)">
                  点击查看用户附属信息
@@ -56,7 +85,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="第三方信息" width="250px" align="center">
+      <el-table-column label="第三方信息" align="center">
         <template slot-scope="scope">
              <el-link type="primary" @click="handleUserThirdsPv(scope.row.userThirds)">
                  点击查看用户第三方信息
@@ -65,14 +94,18 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="临时权限" align="center">
+        <template slot-scope="scope">
+             <el-link type="primary">
+                 待实现
+                 <i class="el-icon-view el-icon--right"></i>
+            </el-link>          
+        </template>
+      </el-table-column>
 
-      <el-table-column label="操作" align="center" width="400" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center"  class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            操作字典
-          </el-button>
-
+        <el-link><i class="el-icon-refresh-right" @click="resetPasswordButton(row.id)"></i></el-link>
         </template>
       </el-table-column>
 
@@ -81,32 +114,39 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
 
-    <!-- 添加/修改字典  :rules="rules"-->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <!-- 添加管理员-->
+    <el-dialog title="添加管理员" :visible.sync="dialogFormVisible">
 
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="dataForm" :rules="rules" :model="addAdministratorsDTO" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
       
-      <!-- 编辑状态下属性为只读  -->
-        <el-form-item label="KEY" prop="dicKey" >
-          <el-input v-model="temp.dicKey"  :disabled="readonly"/>
+        <el-form-item label="用户名" prop="phone" >
+          <el-input v-model="addAdministratorsDTO.phone" />
         </el-form-item>
     
-        <el-form-item label="Val" prop="dicValue">
-          <el-input v-model="temp.dicValue" />
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addAdministratorsDTO.password" />
         </el-form-item>
 
-         <el-form-item label="备注" prop="remarks">
-          <el-input v-model="temp.remarks" />
+        <el-form-item label="角色"  prop="roleId">
+        <el-select v-model="addAdministratorsDTO.roleId" clearable placeholder="请选择角色" style="width: 330px;"  >
+            <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
+            </el-option>
+        </el-select>            
         </el-form-item>
+      
 
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
-          取消
+          我再想想
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          确认
+        <el-button type="primary" @click="createData()">
+          添加
         </el-button>
       </div>
     </el-dialog>
@@ -138,8 +178,10 @@
 
 <script>
 import Pagination from '@/components/Pagination' 
-import{queryUserTabulation} from '@/api/usermanagement'
+import{queryUserTabulation,addAdministrators,resetPassword} from '@/api/usermanagement'
+import { queryRoleAll} from '@/api/role'
 import waves from '@/directive/waves' 
+import {parseTime} from '@/utils' 
 
 //不能删除,会报错
 const calendarTypeOptions = [
@@ -184,6 +226,12 @@ export default {
     pvListTem:[],
     userTitle:"",
     pvData: [],
+    options: [],    
+    userCreateTime: '', 
+    calendarTypeOptions,
+    dialogFormVisible: false,
+    dialogStatus: '',
+    downloadLoading: false, 
     //身份信息
     realnamePvData:[
     { "key":"用户名",'pv': ""},
@@ -208,57 +256,78 @@ export default {
        { "key":"用户age",'pv': ""},
        { "key":"用户头像",'pv': ""}
     ],
+    //实名选择框
+    isRealNamePv:[
+      {value:1,label:"是"},
+      {value:2,label:"否"},
+    ],
+    //时间选项框
+    pickerOptions: {
+      shortcuts: [{
+        text: '最近一周',
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+          picker.$emit('pick', [start, end]);
+        }
+      }, {
+        text: '最近一个月',
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+          picker.$emit('pick', [start, end]);
+        }
+      }, {
+        text: '最近三个月',
+        onClick(picker) {
+          const end = new Date();
+          const start = new Date();
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+          picker.$emit('pick', [start, end]);
+        }
+      }]
+    },
     //搜索条件
     listQuery: {
     page: 1,
     limit: 10,
-    key:undefined,
-    remarks:undefined
+    comprehensive:undefined,
+    roleId:undefined,
+    isReal:undefined,
+    crateStartTime:undefined,
+    crateEndTime:undefined
     },
-
-
-
-
-      calendarTypeOptions,
-      showReviewer: false,
-      //返回结果
-      temp: {
-        id: undefined,
-        dicKey:"",
-        dicValue:"",
-        remarks:"",
-        createTime:"",
-        updateTime:""
-       },
-
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: '操作字典',
-        create: '添加新的字典'
-      },
-      
-      
-      //prop="remarks" 必须跟rules的对象名一致
-      rules: {
-       dicKey: [{ required: true, message: '此项为必填项', trigger: 'blur' }],
-       dicValue: [{ required: true, message: '此项为必填项', trigger: 'blur' }],
-       remarks: [{ required: true, message: '此项为必填项', trigger: 'blur' }]
-      },
-      downloadLoading: false,
-      //设置只读属性
-      readonly:true
+    //添加管理员DTO
+    addAdministratorsDTO:{
+      phone:undefined,
+      password:undefined,
+      roleId:undefined
+    },
+    //校验
+    rules: {
+      phone: [{ required: true, message: '此项为必填项', trigger: 'blur' }],
+      password: [{ required: true, message: '此项为必填项', trigger: 'blur' }],
+      roleId: [{ required: true, message: '此项为必填项', trigger: 'blur' }]
+     }
     }
   },
 
   created() {
-    this.getList()
+    this.getList(),
+    this.queryRoleList()
   },
 
   methods: {
 
     //获取用户列表 
     getList() {
+       //判断是否存在创建时间查询
+       if(this.userCreateTime!=''&& this.userCreateTime.length>0){
+         this.listQuery.crateStartTime=parseTime(this.userCreateTime[0],'{y}-{m}-{d}');
+         this.listQuery.crateEndTime=parseTime(this.userCreateTime[1],'{y}-{m}-{d}');
+       } 
       this.listLoading = true
       queryUserTabulation(this.listQuery).then(response => {
         this.list = response.data
@@ -348,46 +417,33 @@ export default {
     this.elasticFrameUserThirdsPv(this.pvListTem);
     },
 
-    //临时数据存储
-     resetTemp() {
-      this.temp = {
-        id: undefined,
-        dicKey:"",
-        dicValue:"",
-        remarks:"",
-        createTime:"",
-        updateTime:""
-      }
+    //获取所有角色
+    queryRoleList(){
+        queryRoleAll().then(response => {
+        this.options = response.data
+        setTimeout(() => {
+          this.listLoading = false
+        }, 0 * 1)
+      })
     },
+
+    //添加管理员按钮触发事件
     handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
       this.dialogFormVisible = true
-      this.readonly=false
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) 
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.readonly=true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    //添加字典
+
+    //添加管理员api
      createData() {
-       console.log(this.temp)
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          addAdministrators(this.addAdministratorsDTO).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
-              message: '添加新字典成功',
+              message: '添加管理员成功',
               type: 'success',
               duration: 2000
             })
@@ -397,6 +453,28 @@ export default {
         }
       })
     },
+    //重置密码弹框
+    resetPasswordButton(userId){
+      this.$confirm('此操作将重置该用户的密码, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '我再想想',
+        type: 'warning'
+      }).then(() => {
+        resetPassword(userId).then(() => {
+        this.$message({
+          type: 'success',
+          message: '重置密码成功!'
+        });          
+         })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消重置'
+        });          
+      });
+    },
+
+
     //修改字典
     updateData() {
       this.$refs['dataForm'].validate((valid) => {

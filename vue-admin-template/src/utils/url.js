@@ -25,6 +25,12 @@ const url={
     //删除角色
     "deleteRole":base_url+"/apigateway/authority-service/api/role/deleteRole",
     //获取用户列表
-    "queryUserTabulation":base_url+"/apigateway/user-center/api/user-center/queryUserTabulation"
+    "queryUserTabulation":base_url+"/apigateway/user-center/api/user-center/queryUserTabulation",
+    //获取所有角色列表(选择框)
+    "queryRoleAll":base_url+"/apigateway/authority-service/api/role/queryRoleAll",
+    //添加管理员
+    "addAdministrators":base_url+"/apigateway/user-center/api/user-center/addAdministrators",
+    //重置用户密码
+    "resetPassword":base_url+"/apigateway/user-center/api/user-center/resetPassword"
 }
 export default url

@@ -9,3 +9,20 @@ export function queryUserTabulation(data) {
       data
     })
   }
+
+//添加管理员
+export function addAdministrators(data) {
+  return request({
+    url: path.addAdministrators,
+    method: 'post',
+    data
+  })
+}
+
+//添加管理员
+export function resetPassword(data) {
+  return request({
+    url: path.resetPassword+"?userId="+data,
+    method: 'put'
+  })
+}

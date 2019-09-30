@@ -27,38 +27,38 @@
     >
 
 
-      <el-table-column label="字典的key" width="350px" align="center">
+      <el-table-column label="字典的key" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.dicKey }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="字典的val" width="210px" align="center">
+      <el-table-column label="字典的val"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.dicValue }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="备注" width="310px" align="center">
+      <el-table-column label="备注"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.remarks}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="250px" align="center">
+      <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="更新时间" width="250px" align="center">
+      <el-table-column label="更新时间"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
 
 
-      <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center"  class-name="small-padding fixed-width">
         <template slot-scope="{row}">
 
           <el-button type="primary" size="mini" @click="handleUpdate(row)">

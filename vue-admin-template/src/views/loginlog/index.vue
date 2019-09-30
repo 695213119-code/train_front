@@ -25,31 +25,31 @@
       style="width: 100%;"
     >
 
-     <el-table-column label="手机号" width="350px" align="center">
+     <el-table-column label="手机号"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="用户名" width="350px" align="center">
+      <el-table-column label="用户名" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userName==""?"未实名制的用户":scope.row.userName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录Ip地址" width="310px" align="center">
+      <el-table-column label="登录Ip地址"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ipAddress }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录平台" width="310px" align="center">
+      <el-table-column label="登录平台"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.platform==1?"PC端":scope.row.platform==2?"APP端":"小程序端" }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="登录时间" width="350px" align="center">
+      <el-table-column label="登录时间"  align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.loginTime }}</span>
         </template>

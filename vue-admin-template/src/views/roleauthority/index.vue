@@ -5,43 +5,43 @@
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
 
-      <el-table-column align="center" label="角色名称" width="200">
+      <el-table-column align="center" label="角色名称" >
         <template slot-scope="scope">
           {{ scope.row.roleName }}
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="角色职责" width="320">
+      <el-table-column align="center" label="角色职责" >
         <template slot-scope="scope">
           {{ scope.row.roleDuty }}
         </template>
       </el-table-column>
 
-      <el-table-column align="header-center" label="创建时间" width="220">
+      <el-table-column align="header-center" label="创建时间" >
         <template slot-scope="scope">
           {{ scope.row.createTime }}
         </template>
       </el-table-column>
 
-      <el-table-column align="header-center" label="更新时间" width="220">
+      <el-table-column align="header-center" label="更新时间" >
         <template slot-scope="scope">
           {{ scope.row.updateTime }}
         </template>
       </el-table-column>
 
 
-      <el-table-column align="header-center" label="角色权限" width="220">
+      <el-table-column align="header-center" label="角色权限" >
         <template slot-scope="scope">
          <el-link type="primary" @click="queryRolePermissions(scope.row.roleAuthority,scope.row.selectPermissions)">点击查看权限<i class="el-icon-view el-icon--right"></i> </el-link>
         </template>
         
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="490">
+      <el-table-column align="center" label="操作"  >
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="handleEdit(scope)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
-          <el-button type="info " size="small"   @click="empowerment(scope.row.id,scope.row.roleAuthority,scope.row.selectPermissions)">赋权</el-button>
+          <el-link><i class="el-icon-edit" @click="handleEdit(scope)">编辑</i></el-link>
+          <el-link><i class="el-icon-delete"  @click="handleDelete(scope)">删除</i></el-link>
+          <el-link> <i class="el-icon-user-solid" @click="empowerment(scope.row.id,scope.row.roleAuthority,scope.row.selectPermissions)">赋权</i></el-link>
         </template>  
       </el-table-column> 
     </el-table>

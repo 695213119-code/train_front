@@ -44,3 +44,11 @@ export function deleteRole(id) {
     method: 'delete'
   })
 }
+
+//获取所有角色
+export function queryRoleAll() {
+  return request({
+    url: path.queryRoleAll,
+    method: 'get'
+  })
+}
